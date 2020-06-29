@@ -42,10 +42,10 @@ async function employeeQuestions() {
     ];
 
     return await inquirer.prompt(questions);
-}
+};
 
 async function createManager({ name, id, email }) {
-    const questions = [
+    const question = [
         {
             type: "input",
             name: "officeNumber",
@@ -53,9 +53,23 @@ async function createManager({ name, id, email }) {
         }
     ];
 
-    const { officeNumber } = await inquirer.prompt(questions);
+    const { officeNumber } = await inquirer.prompt(question);
     const manager = new Manager(name, id, email, officeNumber);
     return manager;
+};
+
+async function createEngineer({ name, id, email }) {
+    const question =[
+        {
+            type: "input",
+            name: "github",
+            message: "Engineer's GitHub username:"
+        }
+    ];
+
+    const { github } = await inquirer.prompt(question);
+    const engineer = new Engineer(name, id, email, github);
+    return engineer;
 }
 
 // Write code to use inquirer to gather information about the development team members,
