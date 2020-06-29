@@ -70,7 +70,21 @@ async function createEngineer({ name, id, email }) {
     const { github } = await inquirer.prompt(question);
     const engineer = new Engineer(name, id, email, github);
     return engineer;
-}
+};
+
+async function createIntern ({ name, id, email}) {
+    const question = [
+        {
+            type: "input",
+            name: "school",
+            message: "Intern's school they are currently attending:"
+        }
+    ];
+
+    const { school } = await inquirer.prompt(question);
+    const intern = new Intern(name, id, email, school);
+    return intern;
+};
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
