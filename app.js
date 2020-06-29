@@ -40,6 +40,22 @@ async function employeeQuestions() {
             ]
         }
     ];
+
+    return await inquirer.prompt(questions);
+}
+
+async function createManager({ name, id, email }) {
+    const questions = [
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "Manager's office number:"
+        }
+    ];
+
+    const { officeNumber } = await inquirer.prompt(questions);
+    const manager = new Manager(name, id, email, officeNumber);
+    return manager;
 }
 
 // Write code to use inquirer to gather information about the development team members,
