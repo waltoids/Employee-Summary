@@ -34,9 +34,9 @@ async function employeeQuestions() {
             name: "role",
             message: "Employee's role:",
             choices: [
-                'manger',
-                'engineer',
-                'intern'
+                "manager",
+                "engineer",
+                "intern"
             ]
         }
     ];
@@ -86,25 +86,54 @@ async function createIntern ({ name, id, email}) {
     return intern;
 };
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+async function init() {
+    console.log("Answer these questions to add employees to the tracker.");
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+    let addEmployees = {
+        addmore: "yes"
+    };
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+    while (addEmployees.addmore === "yes") {
+        try {
+            const response = await employeeQuestions();
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+            switch (response.role) {
+                case "manager":
+                    employee.push(await createManager({...response}));
+                    break;
+                case "engineer":
+                    employee.push(await createEngineer({...response}));
+                    break;
+                case "intern":
+                    employee.push(await createIntern({...response}));
+                    break;
+                default:
+                    console.error("An error has occured")
+            }
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+            addEmployees = await inquirer.prompt({
+                type: "list",
+                name: "addmore",
+                message: "Do you want to add any more employees?",
+                choices: ["yes", "no"]
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    renderHTML(employee);
+}
+
+function renderHTML() {
+    const renders = render(employee);
+
+    if(!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdir(OUTPUT_DIR);
+    }
+
+    fs.writeFile(outputPath, renders, function(err) {
+        if (err) return console.error(err)
+    });
+}
+
+init();
